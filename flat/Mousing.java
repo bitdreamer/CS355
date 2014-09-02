@@ -108,7 +108,7 @@ public class Mousing extends JFrame implements GLEventListener
         gl.glLoadIdentity();
    }
 
-
+   // whatever
    public void dispose(GLAutoDrawable arg0) 
    {
       System.out.println("dispose() called");
