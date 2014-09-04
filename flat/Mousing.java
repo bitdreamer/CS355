@@ -16,6 +16,9 @@ public class Mousing extends JFrame implements GLEventListener
 {
    private GLU glu = new GLU(); // just has some function we like
    
+   double xmin=-2, xmax=2, ymin=-2, ymax=2;
+   Fly theFly = new Fly(0,0);
+   
     public static void main(String[] args) 
     {
        new Mousing();
@@ -57,7 +60,7 @@ public class Mousing extends JFrame implements GLEventListener
 
         gl.glBegin(GL2.GL_TRIANGLES);     
        
-
+/*
         gl.glColor4fv(red, 0);
         gl.glVertex2f( 0.0f, 1.0f  );
         gl.glVertex2f( -1.0f, -1.0f  );
@@ -69,6 +72,8 @@ public class Mousing extends JFrame implements GLEventListener
         gl.glVertex2f( 0.0f, 0.0f );
         gl.glVertex2f( 2.0f, 2.0f );
         gl.glEnd();
+ */       
+        theFly.drawMe( gl );
 
         gl.glFlush();
    }
@@ -103,7 +108,7 @@ public class Mousing extends JFrame implements GLEventListener
         gl.glLoadIdentity();
 
         // glu.gluPerspective(45.0f, h, 1.0, 20.0);
-        glu.gluOrtho2D( -2, 2, -2, 2 );
+        glu.gluOrtho2D( xmin, xmax, ymin, ymax );
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
    }
@@ -120,6 +125,8 @@ public class Mousing extends JFrame implements GLEventListener
       System.out.println("glutMouseFunc called");
    }
    
+   
+   // mouse methods
    public void mouseReleased( MouseEvent m ) {}
    public void mouseEntered( MouseEvent m ) {}
    public void mousePressed( MouseEvent m ) {}
@@ -127,6 +134,12 @@ public class Mousing extends JFrame implements GLEventListener
    public void mouseClicked( MouseEvent m )
    {
       System.out.println("mouse clicked at "+m.getX()+" "+m.getY());
+      System.out.println("model coords: "+xScreen2Model(m.getX())+" "
+                         +yScreen2Model( m.getY())
+                        );
+      
+      theFly = new Fly( xScreen2Model(m.getX()), yScreen2Model(m.getY()) );
+      // repaint();
    }
    public void mouseMoved( MouseEvent m ) {}
    public void mouseDragged( MouseEvent m )
@@ -134,5 +147,25 @@ public class Mousing extends JFrame implements GLEventListener
       System.out.println("mouse dragged to "+m.getX()+" "+m.getY());
           
    }
+   
+   public double xScreen2Model( int xScreen )
+   {
+      double xModel = 0;
+      
+      xModel = (1.0*xScreen)/getWidth() * (xmax-xmin ) + xmin ;
+      
+      return xModel;    
+   }
 
+   public double yScreen2Model( int yScreen )
+   {
+      double yModel = 0;
+      
+      yModel = ymax - (1.0*yScreen)/getHeight() * (ymax-ymin ) ;
+      
+      return yModel;    
+   }
+
+   
+   
 }
