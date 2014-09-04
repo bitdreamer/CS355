@@ -15,6 +15,7 @@ public class Mousing extends JFrame implements GLEventListener
    , MouseListener, MouseMotionListener
 {
    private GLU glu = new GLU(); // just has some function we like
+   GLCanvas glcanvas;
    
    double xmin=-2, xmax=2, ymin=-2, ymax=2;
    Fly theFly = new Fly(0,0);
@@ -31,7 +32,8 @@ public class Mousing extends JFrame implements GLEventListener
       GLCapabilities capabilities = new GLCapabilities(profile);
  
       // The canvas is the widget that's drawn in the JFrame
-      GLCanvas glcanvas = new GLCanvas(capabilities);
+      // GLCanvas local def converted to global
+      glcanvas = new GLCanvas(capabilities);
       glcanvas.addGLEventListener(this); // catches events needing redraw, reshape ...
       glcanvas.addMouseListener(this); // mouse clicks get sent to mouseClicked() ...
       glcanvas.addMouseMotionListener(this); // get move overs and drags
@@ -140,6 +142,8 @@ public class Mousing extends JFrame implements GLEventListener
       
       theFly = new Fly( xScreen2Model(m.getX()), yScreen2Model(m.getY()) );
       // repaint();
+      //gl.gluglutPostRedisplay();
+      glcanvas.display(); // this forces a redraw
    }
    public void mouseMoved( MouseEvent m ) {}
    public void mouseDragged( MouseEvent m )
@@ -148,6 +152,9 @@ public class Mousing extends JFrame implements GLEventListener
           
    }
    
+   
+   // These convert pixels to model coords so we can draw.  
+   // They are not quite right ... missing and offset or something.
    public double xScreen2Model( int xScreen )
    {
       double xModel = 0;
