@@ -17,6 +17,13 @@ public class Mousing extends JFrame implements GLEventListener
    private GLU glu = new GLU(); // just has some function we like
    GLCanvas glcanvas;
    
+   int wid=300, hit=300;  // these remember reshape call values
+   // Note: getWidth and getHeight give values not consistent with 
+   // glcanvas coordinates.
+   
+   int mouseDownX=150, mouseDownY=150;
+   int mouseX=250, mouseY=350;
+   
    double xmin=-2, xmax=2, ymin=-2, ymax=2;
    Fly theFly = new Fly(0,0);
    
@@ -59,23 +66,17 @@ public class Mousing extends JFrame implements GLEventListener
         
         float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
         float green[] = { 0.0f, 1.0f, 0.3f, 1.0f }; // green ish
-
-        gl.glBegin(GL2.GL_TRIANGLES);     
-       
-/*
-        gl.glColor4fv(red, 0);
-        gl.glVertex2f( 0.0f, 1.0f  );
-        gl.glVertex2f( -1.0f, -1.0f  );
-        gl.glVertex2f( 1.0f, -1.0f );
-        gl.glEnd();   
-        
-        gl.glBegin(GL2.GL_LINES );
-        gl.glColor4fv( green, 0 );
-        gl.glVertex2f( 0.0f, 0.0f );
-        gl.glVertex2f( 2.0f, 2.0f );
-        gl.glEnd();
- */       
+      
         theFly.drawMe( gl );
+        
+        //gl.glEnable(GL2.GL_COLOR_LOGIC_OP);
+        //gl.glLogicOp(GL2.GL_XOR);
+        gl.glColor3f( 1.0f, 1.0f, 1.0f );
+
+        gl.glBegin( GL2.GL_LINE_LOOP );
+        gl.glVertex2f( (float)(xScreen2Model(mouseDownX)), (float)(yScreen2Model(mouseDownY))  );
+        gl.glVertex2f( (float)(xScreen2Model(mouseX)), (float)(yScreen2Model(mouseY))  );
+        gl.glEnd();
 
         gl.glFlush();
    }
@@ -95,7 +96,9 @@ public class Mousing extends JFrame implements GLEventListener
 
    public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) 
    {
-      System.out.println("reshape() called: x = "+x+", y = "+y+", width = "+width+", height = "+height);
+      wid = width; hit = height;
+      
+      //System.out.println("reshape() called: x = "+x+", y = "+y+", width = "+width+", height = "+height);
         final GL2 gl = gLDrawable.getGL().getGL2();
 
         if (height <= 0) // avoid a divide by zero error!
@@ -105,6 +108,7 @@ public class Mousing extends JFrame implements GLEventListener
 
         final float h = (float) width / (float) height; // aspect ration
 
+        //gl.glViewport(0, 0, width, height);
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
@@ -135,12 +139,15 @@ public class Mousing extends JFrame implements GLEventListener
    public void mouseExited( MouseEvent m ) {}
    public void mouseClicked( MouseEvent m )
    {
-      System.out.println("mouse clicked at "+m.getX()+" "+m.getY());
-      System.out.println("model coords: "+xScreen2Model(m.getX())+" "
-                         +yScreen2Model( m.getY())
-                        );
+      mouseDownX = m.getX();
+      mouseDownY = m.getY();
       
-      theFly = new Fly( xScreen2Model(m.getX()), yScreen2Model(m.getY()) );
+      //System.out.println("mouse clicked at "+m.getX()+" "+m.getY());
+      //System.out.println("model coords: "+xScreen2Model(m.getX())+" "
+      //                   +yScreen2Model( m.getY())
+      //                  );
+      
+      theFly = new Fly( xScreen2Model(mouseDownX), yScreen2Model(mouseDownY) );
       // repaint();
       //gl.gluglutPostRedisplay();
       glcanvas.display(); // this forces a redraw
@@ -148,8 +155,10 @@ public class Mousing extends JFrame implements GLEventListener
    public void mouseMoved( MouseEvent m ) {}
    public void mouseDragged( MouseEvent m )
    {
-      System.out.println("mouse dragged to "+m.getX()+" "+m.getY());
-          
+      //System.out.println("mouse dragged to "+m.getX()+" "+m.getY());
+      
+     mouseX = m.getX(); mouseY = m.getY();
+          glcanvas.display();
    }
    
    
@@ -159,7 +168,7 @@ public class Mousing extends JFrame implements GLEventListener
    {
       double xModel = 0;
       
-      xModel = (1.0*xScreen)/getWidth() * (xmax-xmin ) + xmin ;
+      xModel = (1.0*xScreen)/wid * (xmax-xmin ) + xmin ;
       
       return xModel;    
    }
@@ -168,7 +177,7 @@ public class Mousing extends JFrame implements GLEventListener
    {
       double yModel = 0;
       
-      yModel = ymax - (1.0*yScreen)/getHeight() * (ymax-ymin ) ;
+      yModel = ymax - (1.0*yScreen)/hit * (ymax-ymin ) ;
       
       return yModel;    
    }

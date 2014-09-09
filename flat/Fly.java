@@ -25,14 +25,18 @@ public class Fly
       float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f }; // green ish 
       gl.glColor4fv(blue, 0);      
 
-   
+      float[] w = myDot.getf();  
 
       gl.glBegin(GL2.GL_POLYGON);     
-       float[] w = myDot.getf();
-       gl.glVertex2f( w[0], w[1]  ); // given Dot
-       gl.glVertex2f( (float)(w[0]+0.2), w[1]  ); // given Dot
-       gl.glVertex2f( w[0], (float)(w[1]+0.2)  ); // given Dot
-      gl.glEnd();
+      gl.glVertex2f( w[0], w[1]  ); // given Dot
+      gl.glVertex2f( (float)(w[0]+0.2), w[1]  ); // given Dot
+      gl.glVertex2f( w[0], (float)(w[1]+0.2)  ); // given Dot
+     gl.glEnd();
+     gl.glBegin(GL2.GL_POLYGON);     
+     gl.glVertex2f( w[0], w[1]  ); // given Dot
+     gl.glVertex2f( (float)(w[0]-0.2), w[1]  ); // given Dot
+     gl.glVertex2f( w[0], (float)(w[1]-0.2)  ); // given Dot
+    gl.glEnd();
             
    }
 
