@@ -21,8 +21,8 @@ public class Mousing extends JFrame implements GLEventListener
    // Note: getWidth and getHeight give values not consistent with 
    // glcanvas coordinates.
    
-   int mouseDownX=150, mouseDownY=150;
-   int mouseX=250, mouseY=350;
+   int mouseDownX=150, mouseDownY=150; // where you click the mouse
+   int mouseX=250, mouseY=350;  // where you drag the mouse
    
    double xmin=-2, xmax=2, ymin=-2, ymax=2;
    Fly theFly = new Fly(0,0);
@@ -69,13 +69,27 @@ public class Mousing extends JFrame implements GLEventListener
       
         theFly.drawMe( gl );
         
+        // draw a line , no a box
         //gl.glEnable(GL2.GL_COLOR_LOGIC_OP);
         //gl.glLogicOp(GL2.GL_XOR);
         gl.glColor3f( 1.0f, 1.0f, 1.0f );
 
-        gl.glBegin( GL2.GL_LINE_LOOP );
-        gl.glVertex2f( (float)(xScreen2Model(mouseDownX)), (float)(yScreen2Model(mouseDownY))  );
-        gl.glVertex2f( (float)(xScreen2Model(mouseX)), (float)(yScreen2Model(mouseY))  );
+//        gl.glBegin( GL2.GL_LINE_LOOP );
+        gl.glBegin( GL2.GL_LINE_LOOP);
+        float mdX =  (float)(xScreen2Model(mouseDownX));
+        float mX =  (float)(xScreen2Model(mouseX));
+        float mdY =  (float)(yScreen2Model(mouseDownY));
+        float mY =  (float)(yScreen2Model(mouseY));
+        
+        // snap line
+        //gl.glVertex2f( mdX, mdY  );
+        //gl.glVertex2f( mX, mY  );
+        
+        // snap box
+        gl.glVertex2f( mdX, mdY );
+        gl.glVertex2f( mX, mdY );
+        gl.glVertex2f( mX, mY );
+        gl.glVertex2f( mdX, mY );
         gl.glEnd();
 
         gl.glFlush();
@@ -135,13 +149,14 @@ public class Mousing extends JFrame implements GLEventListener
    // mouse methods
    public void mouseReleased( MouseEvent m ) {}
    public void mouseEntered( MouseEvent m ) {}
-   public void mousePressed( MouseEvent m ) {}
+   public void mousePressed( MouseEvent m )
+   {
+      mouseDownX = m.getX();
+      mouseDownY = m.getY();      
+   }
    public void mouseExited( MouseEvent m ) {}
    public void mouseClicked( MouseEvent m )
    {
-      mouseDownX = m.getX();
-      mouseDownY = m.getY();
-      
       //System.out.println("mouse clicked at "+m.getX()+" "+m.getY());
       //System.out.println("model coords: "+xScreen2Model(m.getX())+" "
       //                   +yScreen2Model( m.getY())
