@@ -15,6 +15,8 @@ public class SierpinskiMain extends JFrame implements GLEventListener
 
 	public static void main(String[] args) 
 	{
+	   
+	   System.out.println("hi there");
 		new SierpinskiMain();
 	}
 
@@ -58,7 +60,7 @@ public class SierpinskiMain extends JFrame implements GLEventListener
 		Dot c = new Dot();
 		c.x[0] = 0; c.x[1] = -125;
 		
-		s1.drawMe(a,b,c,gl,4);
+		s1.drawMe(a,b,c,gl,9);
 
 		gl.glFlush();
 	}

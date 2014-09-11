@@ -34,7 +34,7 @@ public class Mousing extends JFrame implements GLEventListener
     
     public Mousing()
    {
-      setTitle("TwoTemplate");
+      setTitle("Mousing");
       GLProfile profile = GLProfile.get(GLProfile.GL2);
       GLCapabilities capabilities = new GLCapabilities(profile);
  

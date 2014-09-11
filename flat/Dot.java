@@ -5,6 +5,8 @@
 
 package flat;
 
+import java.nio.FloatBuffer;
+
 public class Dot
 {
    double[] x;
@@ -33,6 +35,14 @@ public class Dot
       
       return w;
    }
-   
+   public FloatBuffer getv()
+   {
+      FloatBuffer v;
+      
+      v = FloatBuffer.wrap( getf() );
+
+      return v;
+   }
+
   
 }
