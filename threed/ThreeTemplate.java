@@ -16,6 +16,10 @@ public class ThreeTemplate extends JFrame implements GLEventListener
 {
    private GLU glu = new GLU(); // just has some function we like
    
+   float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
+   float green[] = { 0.0f, 1.0f, 0.3f, 1.0f }; // green ish
+   float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f};
+   
    Cube cube1;
    
     public static void main(String[] args) 
@@ -48,17 +52,15 @@ public class ThreeTemplate extends JFrame implements GLEventListener
    {
       
         final GL2 gl = gLDrawable.getGL().getGL2(); // make the gl so we can draw
-        //setLighting(gl);
+        setLighting(gl);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //gl.glLoadIdentity();
        // gl.glTranslatef(-1.5f, 0.0f, -6.0f);
         
-        float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
-        float green[] = { 0.0f, 1.0f, 0.3f, 1.0f }; // green ish
 
         gl.glBegin(GL2.GL_TRIANGLES);     
        
-
+/*
         gl.glColor4fv(red, 0);
         gl.glVertex3f( 0.0f, 1.0f, 0.0f  );
         gl.glVertex3f( -1.0f, -1.0f, 0.0f   );
@@ -70,7 +72,7 @@ public class ThreeTemplate extends JFrame implements GLEventListener
         gl.glVertex3f( 0.0f, 0.0f, 0.0f  );
         gl.glVertex3f( 2.0f, 2.0f, 0.0f  );
         gl.glEnd();
-        
+ */      
         cube1.drawMe(gl);
 
         gl.glFlush();
@@ -127,13 +129,16 @@ public class ThreeTemplate extends JFrame implements GLEventListener
        //gl.glEnable(GL.GL_CULL_FACE);
 
       float[] lambi = { 0.3f, 0.3f, 0.5f,  1.0f };
-      float[] lidif = { 1f, 1f, 1f, 1.0f };
+      float[] lidif = { 0.1f, 0.1f, 0.1f, 1.0f };
       // float[] lspec = { 1f, 1f, 1f, 1.0f };
       // float[] lipos = { 1.0f, 4.0f, 2.0f, 0.0f };
       gl.glLightfv( gl.GL_LIGHT0, gl.GL_AMBIENT , lambi, 0 );
       gl.glLightfv( gl.GL_LIGHT0, gl.GL_DIFFUSE , lidif, 0 );
       //gl.glLightfv( gl.GL_LIGHT0, gl.GL_SPECULAR, lspec, 0 );
       // gl.glLightfv( gl.GL_LIGHT0, gl.GL_POSITION, lipos, 0 );
+      
+      gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, blue, 0);
+
 
       gl.glEnable(GL.GL_DEPTH_TEST);
 
