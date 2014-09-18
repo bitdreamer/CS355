@@ -23,6 +23,7 @@ public class Complex
         real = a.real; imag = a.imag;
     }
 
+    // this one uses a lot of garbage collection
     public Complex plus( Complex a )
     {
         Complex z = new Complex();
@@ -60,6 +61,16 @@ public class Complex
         return z;
 
     }
+    
+    // multiply 'a' into THIS number
+    public void multiply( Complex a )
+    {
+       double rsaved = real;
+       double arsaved = a.real;
+       real = real*a.real - imag*a.imag;
+       imag = rsaved*a.imag + imag*arsaved;
+       
+    }
 
     // time.  return Complex which is this one times a (double)
     public Complex times( double a )
@@ -67,6 +78,12 @@ public class Complex
         return new Complex( real*a, imag*a );
     }
 
+    public void squareMe()
+    {
+       double temp = real*real - imag*imag;
+       imag = 2 * real * imag;
+       real = temp;
+    }
 
 
     public double magsq()

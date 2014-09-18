@@ -1,46 +1,75 @@
-// ThreeTemplate.java
+// Twirly.java
 // Barrett Koster 2014
 // This file is a template for doing 3D drawings in OpenGL.  
+// This has attached files 
 
 package threed;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*; 
+import javax.swing.*;
 
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
-import javax.swing.JFrame;
+//import javax.swing.JFrame;
+import com.jogamp.opengl.util.*;
  
-public class ThreeTemplate extends JFrame implements GLEventListener
+public class Twirly extends JFrame implements GLEventListener, ActionListener,
+  MouseListener
 {
    private GLU glu = new GLU(); // just has some function we like
+   Animator ani;
+   final Twirly thisthis ;
+   
+   GLCanvas glcanvas;
    
    float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
    float green[] = { 0.0f, 1.0f, 0.3f, 1.0f }; // green ish
    float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f};
    
+   ControlStuff buttons;
+   javax.swing.Timer timey;
+   
    Cube cube1;
    
     public static void main(String[] args) 
     {
-       new ThreeTemplate();
+       new Twirly();
     }
     
-    public ThreeTemplate()
+    public Twirly()
    {
-      setTitle("ThreeTemplate");
+      setTitle("Twirly");
       GLProfile profile = GLProfile.get(GLProfile.GL2);
       GLCapabilities capabilities = new GLCapabilities(profile);
  
       // The canvas is the widget that's drawn in the JFrame
-      GLCanvas glcanvas = new GLCanvas(capabilities);
+      glcanvas = new GLCanvas(capabilities);
       glcanvas.addGLEventListener(this);
+      ani = new Animator(glcanvas);
+     
       glcanvas.setSize( 500, 500 );
       getContentPane().add( glcanvas);
       setSize( getContentPane().getPreferredSize() );
       cube1 = new Cube();
-      setVisible( true );
+      
+      buttons = new ControlStuff( this );
+      timey = new javax.swing.Timer( 500, this);
+      timey.start();
+      ani.start();
+      thisthis = this;
+      
+      addWindowListener(new WindowAdapter() {
+         public void windowClosing(WindowEvent e) {
+         ani.stop();
+         buttons.dispose();
+         thisthis.dispose();
+         System.exit(0);
+         }
+         });
+      
+      setVisible( true );  
     }
     
    // display().  Note that this fuction and most (all?) of the rest are 
@@ -101,7 +130,7 @@ public class ThreeTemplate extends JFrame implements GLEventListener
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glRotated( 20.0, 0.0, 1.0, 0.0 );  
-        gl.glRotated( 40.0, 1.0, 0.0, 0.0 );
+        gl.glRotated(buttons.anglex, 1.0, 0.0, 0.0 );
 
    }
    
@@ -130,12 +159,24 @@ public class ThreeTemplate extends JFrame implements GLEventListener
       gl.glEnable(GL.GL_DEPTH_TEST);
 
    }
-
-
-
+   
+   public void actionPerformed( ActionEvent e )
+   {
+      if ( e.getSource()==timey ) { System.out.println("hey"); }
+      glcanvas.display();
+   
+   }
+   
+   public void mouseEntered( MouseEvent m ) {}
+   public void mouseExited( MouseEvent m ) {}
+   public void mousePressed( MouseEvent m ) {}
+   public void mouseReleased( MouseEvent m ) {}
+   public void mouseClicked( MouseEvent m ) { glcanvas.display(); glcanvas.swapBuffers(); }
+   
+   
    public void dispose(GLAutoDrawable arg0) 
    {
-      System.out.println("ispose() called");
+      System.out.println("dispose() called");
    }
 
 }
