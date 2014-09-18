@@ -20,7 +20,8 @@ public class Twirly extends JFrame implements GLEventListener, ActionListener,
 {
    private GLU glu = new GLU(); // just has some function we like
    Animator ani;
-   final Twirly thisthis ;
+   FPSAnimator goThingy;
+   final Twirly thisthis; // for use in contexts where "this" doesn't work
    
    GLCanvas glcanvas;
    
@@ -47,22 +48,28 @@ public class Twirly extends JFrame implements GLEventListener, ActionListener,
       // The canvas is the widget that's drawn in the JFrame
       glcanvas = new GLCanvas(capabilities);
       glcanvas.addGLEventListener(this);
-      ani = new Animator(glcanvas);
+      //ani = new Animator(glcanvas);
      
       glcanvas.setSize( 500, 500 );
       getContentPane().add( glcanvas);
       setSize( getContentPane().getPreferredSize() );
+
+      goThingy = new FPSAnimator( glcanvas, 3 );
+      goThingy.start();
+
+      
       cube1 = new Cube();
       
       buttons = new ControlStuff( this );
       timey = new javax.swing.Timer( 500, this);
       timey.start();
-      ani.start();
+      //ani.start();
+      //System.out.println("is animating? :"+ ani.isAnimating() );
       thisthis = this;
       
       addWindowListener(new WindowAdapter() {
          public void windowClosing(WindowEvent e) {
-         ani.stop();
+         //ani.stop();
          buttons.dispose();
          thisthis.dispose();
          System.exit(0);
@@ -85,9 +92,7 @@ public class Twirly extends JFrame implements GLEventListener, ActionListener,
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //gl.glLoadIdentity();
        // gl.glTranslatef(-1.5f, 0.0f, -6.0f);
-        
-
-        gl.glBegin(GL2.GL_TRIANGLES);     
+           
            
         cube1.drawMe(gl);
 
