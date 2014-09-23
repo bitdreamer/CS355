@@ -25,7 +25,7 @@ public class ControlStuff extends JFrame implements ActionListener
       
       setVisible(true);
    }
-   
+
    public void actionPerformed( ActionEvent e )
    {
       if ( e.getSource()==rotatexButton ) { anglex += 5;  }

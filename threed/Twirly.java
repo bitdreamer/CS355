@@ -15,13 +15,14 @@ import javax.media.opengl.glu.GLU;
 //import javax.swing.JFrame;
 import com.jogamp.opengl.util.*;
  
-public class Twirly extends JFrame implements GLEventListener, ActionListener,
-  MouseListener
+public class Twirly /* extends JFrame*/ implements GLEventListener // ActionListener,
+   // , MouseListener
 {
    private GLU glu = new GLU(); // just has some function we like
-   Animator ani;
-   FPSAnimator goThingy;
+   Animator goThingy;
    final Twirly thisthis; // for use in contexts where "this" doesn't work
+   Frame theFrame;
+   double yrot = 0;
    
    GLCanvas glcanvas;
    
@@ -40,43 +41,34 @@ public class Twirly extends JFrame implements GLEventListener, ActionListener,
     }
     
     public Twirly()
-   {
-      setTitle("Twirly");
+   {      
       GLProfile profile = GLProfile.get(GLProfile.GL2);
       GLCapabilities capabilities = new GLCapabilities(profile);
- 
-      // The canvas is the widget that's drawn in the JFrame
       glcanvas = new GLCanvas(capabilities);
       glcanvas.addGLEventListener(this);
-      //ani = new Animator(glcanvas);
-     
-      glcanvas.setSize( 500, 500 );
-      getContentPane().add( glcanvas);
-      setSize( getContentPane().getPreferredSize() );
+      
+      theFrame = new Frame("Twirly");
+      theFrame.setSize( new Dimension(500,500) );
+      theFrame.add( glcanvas ); 
 
-      goThingy = new FPSAnimator( glcanvas, 3 );
+      goThingy = new Animator( glcanvas );
       goThingy.start();
 
-      
       cube1 = new Cube();
       
       buttons = new ControlStuff( this );
-      timey = new javax.swing.Timer( 500, this);
-      timey.start();
-      //ani.start();
-      //System.out.println("is animating? :"+ ani.isAnimating() );
       thisthis = this;
       
-      addWindowListener(new WindowAdapter() {
+      theFrame.addWindowListener(new WindowAdapter() {
          public void windowClosing(WindowEvent e) {
          //ani.stop();
          buttons.dispose();
-         thisthis.dispose();
+        
          System.exit(0);
          }
          });
       
-      setVisible( true );  
+       theFrame.setVisible( true );  
     }
     
    // display().  Note that this fuction and most (all?) of the rest are 
@@ -86,8 +78,16 @@ public class Twirly extends JFrame implements GLEventListener, ActionListener,
     // hands you that, the place you are going to draw on.
    public void display(GLAutoDrawable gLDrawable) 
    {
-      
+     // update();
         final GL2 gl = gLDrawable.getGL().getGL2(); // make the gl so we can draw
+        
+        yrot += 0.1;
+        
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glRotated( yrot, 0.0, 1.0, 0.0 );  
+        gl.glRotated(buttons.anglex, 1.0, 0.0, 0.0 );   
+        
         setLighting(gl);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //gl.glLoadIdentity();
@@ -165,6 +165,7 @@ public class Twirly extends JFrame implements GLEventListener, ActionListener,
 
    }
    
+   /*
    public void actionPerformed( ActionEvent e )
    {
       if ( e.getSource()==timey ) { System.out.println("hey"); }
@@ -177,7 +178,7 @@ public class Twirly extends JFrame implements GLEventListener, ActionListener,
    public void mousePressed( MouseEvent m ) {}
    public void mouseReleased( MouseEvent m ) {}
    public void mouseClicked( MouseEvent m ) { glcanvas.display(); glcanvas.swapBuffers(); }
-   
+   */
    
    public void dispose(GLAutoDrawable arg0) 
    {

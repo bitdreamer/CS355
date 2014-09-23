@@ -41,6 +41,9 @@ public class ThreeTemplate extends JFrame implements GLEventListener
       setSize( getContentPane().getPreferredSize() );
       cube1 = new Cube();
       setVisible( true );
+      
+      
+      
     }
     
    // display().  Note that this fuction and most (all?) of the rest are 
