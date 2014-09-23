@@ -1,7 +1,7 @@
-// Twirly.java
+// Twirly2.java
 // Barrett Koster 2014
 // This file is a template for doing 3D drawings in OpenGL.  
-// This has attached files 
+// This also does animation.
 
 package threed;
 
@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
-//import javax.swing.JFrame;
 import com.jogamp.opengl.util.*;
  
 public class Twirly2  extends JFrame implements GLEventListener // ActionListener,
@@ -21,7 +20,6 @@ public class Twirly2  extends JFrame implements GLEventListener // ActionListene
    private GLU glu = new GLU(); // just has some function we like
    Animator goThingy;
    final Twirly2 thisthis; // for use in contexts where "this" doesn't work
-   //Frame theFrame;
    double yrot = 0;
    
    GLCanvas glcanvas;
@@ -47,10 +45,7 @@ public class Twirly2  extends JFrame implements GLEventListener // ActionListene
       glcanvas = new GLCanvas(capabilities);
       glcanvas.addGLEventListener(this);
       
-      //theFrame = new Frame("Twirly");
       setSize( 500, 500 );
-      //theFrame.setSize( new Dimension(500,500) );
-      //theFrame.add( glcanvas ); 
       add(glcanvas);
 
       goThingy = new Animator( glcanvas );
@@ -61,17 +56,15 @@ public class Twirly2  extends JFrame implements GLEventListener // ActionListene
       buttons = new ControlStuff2( this );
       thisthis = this;
       
-      //theFrame.
       addWindowListener(new WindowAdapter() {
          public void windowClosing(WindowEvent e) {
-         //ani.stop();
+         goThingy.stop();
          buttons.dispose();
         
          System.exit(0);
          }
          });
-      
-       //theFrame.
+
        setVisible( true );  
     }
     
@@ -85,19 +78,33 @@ public class Twirly2  extends JFrame implements GLEventListener // ActionListene
      // update();
         final GL2 gl = gLDrawable.getGL().getGL2(); // make the gl so we can draw
         
-        yrot += 0.1;
-        
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glRotated( yrot, 0.0, 1.0, 0.0 );  
         gl.glRotated(buttons.anglex, 1.0, 0.0, 0.0 );   
+        gl.glRotated( buttons.angley, 0.0, 1.0, 0.0 );  
         
         setLighting(gl);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //gl.glLoadIdentity();
        // gl.glTranslatef(-1.5f, 0.0f, -6.0f);
            
-           
+        gl.glPushMatrix();
+        gl.glRotated( buttons.centerx, 1, 0, 0 );   
+        cube1.drawMe(gl); // big center cube
+        gl.glPopMatrix();
+        
+        //push
+        gl.glPushMatrix();
+        gl.glTranslated( 1, 1, 1 );
+        gl.glScaled(  .2, .2, .2 );
+        
+        cube1.drawMe(gl);
+        // pop
+        gl.glPopMatrix();
+        
+        gl.glTranslated( -1, 1, 1 );
+        gl.glScaled( .2, .2, .2 );
+        
         cube1.drawMe(gl);
 
         gl.glFlush();

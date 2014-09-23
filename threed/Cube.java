@@ -40,6 +40,8 @@ public class Cube
       //float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f }; // green ish blue
       //gl.glColor4fv(blue, 0);      
 
+      gl.glPushMatrix();
+      gl.glTranslated(-0.5, -0.5, -0.5 ); // center the cube on the origin
       
       face( gl, 1,5,7,3,na );
       face( gl, 4,6,7,5,nb );
@@ -47,7 +49,7 @@ public class Cube
       face( gl, 1,0,4,5,nd );
       face( gl, 1,3,2,0,ne );
       face( gl, 0,2,6,4,nf );
-
+      gl.glPopMatrix();
    }
    
    public void face( GL2 gl, int a, int b, int c, int d, float[] n )
