@@ -1,4 +1,4 @@
-// Twirly3.java
+// Twirly4.java
 // Barrett Koster 2014
 // This file is a template for doing 3D drawings in OpenGL.  
 // This also does animation.
@@ -14,12 +14,12 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import com.jogamp.opengl.util.*;
  
-public class Twirly3  extends JFrame implements GLEventListener // ActionListener,
+public class Twirly4  extends JFrame implements GLEventListener // ActionListener,
    // , MouseListener
 {
    private GLU glu = new GLU(); // just has some function we like
    Animator goThingy;
-   final Twirly3 thisthis; // for use in contexts where "this" doesn't work
+   final Twirly4 thisthis; // for use in contexts where "this" doesn't work
    double yrot = 0;
    
    GLCanvas glcanvas;
@@ -28,17 +28,37 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
    float green[] = { 0.0f, 1.0f, 0.3f, 1.0f }; // green ish
    float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f};
    
-   ControlStuff3 buttons;
+   BP cameraAngleX; // tilt the direction of gaze down (or minus is up)
+   BP cameraAngleY; // pan left or right on camera
+   BP cameraAngleZ;
+   
+   BP cameraX; // position of the camera
+   BP cameraY;
+   BP cameraZ;
+   
+   BP wholeModelAngleX; //tumbles the whole model toward us
+   BP wholeModelAngleY; // spins the whole model around a vertical axis
+   
+   BP bigCubeAngleX; // flips big center cube over toward you
+   BP bigCubeAngleY; // rotate around verticle axis
+   
+   BP cubieAngleX; // flips the little corner cubies 
+   BP cubieAngleY;
+   
+   BP setOfCubiesAngleZ;
+   
+   
+   ControlStuff4 buttons;
   // javax.swing.Timer timey;
    
    Cube cube1;
    
     public static void main(String[] args) 
     {
-       new Twirly3();
+       new Twirly4();
     }
     
-    public Twirly3()
+    public Twirly4()
    {      
       GLProfile profile = GLProfile.get(GLProfile.GL2);
       GLCapabilities capabilities = new GLCapabilities(profile);
@@ -53,7 +73,25 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
 
       cube1 = new Cube();
       
-      buttons = new ControlStuff3( this );
+      buttons = new ControlStuff4( ) ;
+      cameraAngleX = buttons.addControl("cam look down",20,1);
+      cameraAngleY = buttons.addControl("cam pan right",-12,1);
+      cameraAngleZ = buttons.addControl("cam tilt right",0,1);
+      cameraX = buttons.addControl("cam x",1,0.01);
+      cameraY = buttons.addControl("cam y",2, 0.01);
+      cameraZ = buttons.addControl("cam z",6, 0.01);
+      
+      wholeModelAngleX = buttons.addControl("whole rot x", 0, 1 );
+      wholeModelAngleY = buttons.addControl("whole rot y", 0, 1 );
+      
+      bigCubeAngleX = buttons.addControl("big cube rot x", 0, 1);
+      bigCubeAngleY = buttons.addControl("big cube rot y", 0, 1);
+      
+      cubieAngleX = buttons.addControl("cubies rot x",0,1);
+      cubieAngleY = buttons.addControl("cubies rot y",0,1);
+      
+      setOfCubiesAngleZ = buttons.addControl("cloud z",0,1);
+      
       thisthis = this;
       
       addWindowListener(new WindowAdapter() {
@@ -78,10 +116,28 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
      // update();
         final GL2 gl = gLDrawable.getGL().getGL2(); // make the gl so we can draw
         
+        // this section controls the camera
+        // Note that the rotations (pan) are listed first so that they happen last.
+        // This keeps the center of rotation at the camera.
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+        // glu.gluPerspective(45.0f, h, 1.0, 20.0);
+        gl.glFrustum( -2, 2, -2 ,2, 4, 20 );
+
+        gl.glRotated(cameraAngleZ.q,0,0,1); // tilt the frame
+        gl.glRotated(cameraAngleX.q, 1, 0, 0 ); // look down or up
+        gl.glRotated(cameraAngleY.q, 0, 1, 0 );  // pan left or right
+        gl.glTranslated(-cameraX.q, // this is moving the camera
+                        -cameraY.q, // to position, use negatives
+                        -cameraZ.q
+                       ); // because it is reaally
+        // accomplished by pushing the scene in the opposite direction
+
+        // this section controls the position of the big cube
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glRotated(buttons.anglex, 1.0, 0.0, 0.0 );   
-        gl.glRotated( buttons.angley, 0.0, 1.0, 0.0 );  
+        gl.glRotated(wholeModelAngleX.q, 1.0, 0.0, 0.0 );   
+        gl.glRotated(wholeModelAngleY.q, 0.0, 1.0, 0.0 );  
         
         setLighting(gl);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
@@ -89,9 +145,11 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
        // gl.glTranslatef(-1.5f, 0.0f, -6.0f);
            
         gl.glPushMatrix();
-        gl.glRotated( buttons.centerx, 1, 0, 0 );   
+        gl.glRotated( bigCubeAngleX.q, 1, 0, 0 );   
+        gl.glRotated( bigCubeAngleY.q, 0, 1, 0 );   
         cube1.drawMe(gl); // big center cube
         gl.glPopMatrix();
+       // gl.glSc
         
         for ( int i=-1; i<2; i += 2 )
         {
@@ -104,12 +162,13 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
                  gl.glPushMatrix();
                  
                  // rotates the set of cubies 
-                 //gl.glRotated( buttons.outery, 0, 1, 0 );
-                 
+                 gl.glRotated( setOfCubiesAngleZ.q, 0, 0, 1 );
                  
                  gl.glTranslated( i, j, k );
-                 gl.glRotated( buttons.outery, 0, 1, 0 ); // twirls cubies
-
+                 gl.glRotated( -setOfCubiesAngleZ.q, 0, 0, 1 );
+                 gl.glRotated( cubieAngleY.q, 0, 1, 0 ); // twirls cubies
+                 gl.glRotated( cubieAngleX.q, 1, 0, 0 );
+                 
                  gl.glScaled(  .2, .2, .2 );
                  
                  cube1.drawMe(gl);
@@ -149,18 +208,6 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
         final float h = (float) width / (float) height; // aspect ration
 
         gl.glViewport(0, 0, width, height);
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-        // glu.gluPerspective(45.0f, h, 1.0, 20.0);
-        gl.glFrustum( -2, 2, -2 ,2, 4, 20 );
-        gl.glTranslatef(0.0f, 0.0f, -6.0f);
-    
-        /*
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        //gl.glRotated( 20.0, 0.0, 1.0, 0.0 );  
-        gl.glRotated(buttons.anglex, 1.0, 0.0, 0.0 );
-        */
 
    }
    
@@ -175,7 +222,7 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
        //gl.glEnable(GL.GL_CULL_FACE);
 
       float[] lambi = { 0.3f, 0.3f, 0.5f,  1.0f };
-      float[] lidif = { 0.1f, 0.1f, 0.1f, 1.0f };
+      float[] lidif = { 0.2f, 0.2f, 0.2f, 1.0f };
       // float[] lspec = { 1f, 1f, 1f, 1.0f };
       // float[] lipos = { 1.0f, 4.0f, 2.0f, 0.0f };
       gl.glLightfv( gl.GL_LIGHT0, gl.GL_AMBIENT , lambi, 0 );
@@ -190,20 +237,7 @@ public class Twirly3  extends JFrame implements GLEventListener // ActionListene
 
    }
    
-   /*
-   public void actionPerformed( ActionEvent e )
-   {
-      if ( e.getSource()==timey ) { System.out.println("hey"); }
-      glcanvas.display();
-   
-   }
-   
-   public void mouseEntered( MouseEvent m ) {}
-   public void mouseExited( MouseEvent m ) {}
-   public void mousePressed( MouseEvent m ) {}
-   public void mouseReleased( MouseEvent m ) {}
-   public void mouseClicked( MouseEvent m ) { glcanvas.display(); glcanvas.swapBuffers(); }
-   */
+
    
    public void dispose(GLAutoDrawable arg0) 
    {

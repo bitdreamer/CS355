@@ -66,9 +66,9 @@ public class ControlStuff3 extends JFrame implements ActionListener
       }
       else if ( e.getSource()==timey )
       {
-         //anglex += 1.5;
-         //angley += 2;
-         //centerx += 2.5;
+         anglex += 1.5;
+         angley += 2;
+         centerx += 2.5;
          outery += 3;
       }
    }
