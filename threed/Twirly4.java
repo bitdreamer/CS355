@@ -47,6 +47,8 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
    
    BP setOfCubiesAngleZ;
    
+   BP zoom; // controls the cameral angle width
+   
    
    ControlStuff4 buttons;
   // javax.swing.Timer timey;
@@ -92,6 +94,8 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
       
       setOfCubiesAngleZ = buttons.addControl("cloud z",0,1);
       
+      zoom = buttons.addControl("zoom", 2, 0.01 );
+      
       thisthis = this;
       
       addWindowListener(new WindowAdapter() {
@@ -122,7 +126,7 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
         // glu.gluPerspective(45.0f, h, 1.0, 20.0);
-        gl.glFrustum( -2, 2, -2 ,2, 4, 20 );
+        gl.glFrustum( -zoom.q, zoom.q, -zoom.q ,zoom.q, 4, 20 );
 
         gl.glRotated(cameraAngleZ.q,0,0,1); // tilt the frame
         gl.glRotated(cameraAngleX.q, 1, 0, 0 ); // look down or up
