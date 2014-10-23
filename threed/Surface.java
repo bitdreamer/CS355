@@ -40,6 +40,7 @@ public class Surface  extends JFrame implements GLEventListener // ActionListene
    
    BP wholeModelAngleX; //tumbles the whole model toward us
    BP wholeModelAngleY; // spins the whole model around a vertical axis
+   BP wholeModelAngleZ; // spins the whole model around a vertical axis
    
    BP bigCubeAngleX; // flips big center cube over toward you
    BP bigCubeAngleY; // rotate around verticle axis
@@ -88,6 +89,7 @@ public class Surface  extends JFrame implements GLEventListener // ActionListene
       
       wholeModelAngleX = buttons.addControl("whole rot x", 0, 1 );
       wholeModelAngleY = buttons.addControl("whole rot y", 0, 1 );
+      wholeModelAngleZ = buttons.addControl("whole rot z", 0, 1 );
       
       
       zoom = buttons.addControl("zoom", 2, 0.01 );
@@ -133,13 +135,18 @@ public class Surface  extends JFrame implements GLEventListener // ActionListene
                        ); // because it is reaally
         // accomplished by pushing the scene in the opposite direction
 
+        // setLighting(gl);
+
         // this section controls the position of the big cube
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+        setLighting(gl);
+        
+        
         gl.glRotated(wholeModelAngleX.q, 1.0, 0.0, 0.0 );   
         gl.glRotated(wholeModelAngleY.q, 0.0, 1.0, 0.0 );  
-        
-        setLighting(gl);
+        gl.glRotated(wholeModelAngleZ.q, 0.0, 0.0, 1.0 );  
+               
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         //gl.glLoadIdentity();
        // gl.glTranslatef(-1.5f, 0.0f, -6.0f);
@@ -165,7 +172,8 @@ public class Surface  extends JFrame implements GLEventListener // ActionListene
       System.out.println("init() called");
         GL2 gl = gLDrawable.getGL().getGL2();
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        gl.glShadeModel(GL2.GL_FLAT);
+        // gl.glShadeModel(GL2.GL_FLAT);
+        gl.glShadeModel(GL2.GL_SMOOTH);
    }
 
    public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) 

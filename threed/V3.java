@@ -11,7 +11,7 @@ import java.nio.FloatBuffer;
 
 public class V3
 {
-    protected float [] w;
+    protected float [] w; // values of the vector
     public float[] floats() { return w; }
     public FloatBuffer floatBuffer() { return FloatBuffer.wrap(w,0,3);}
     
@@ -28,6 +28,14 @@ public class V3
         w = new float[3];
         for ( int i=0; i<3; i++ ) { w[i] = h[i]; }  
     }
+    
+    // constructor, takes 3 floats
+    public V3( double x, double y, double z )
+    {
+       w = new float[3];
+       w[0] = (float)x; w[1] = (float) y; w[2] = (float)z; 
+    }
+    
     
     // minus.  returns c = this-b
     public V3 minus( V3 b )

@@ -13,7 +13,7 @@ public class BedSpread
 {
    int gridSize = 100;
    
-   float forest[] = { 0.1f, 0.5f, 0.1f, 1.0f }; // forest green
+   float forest[] = { 0.1f, 0.5f, 0.6f, 1.0f }; // forest green
    float frog[]    = { 0.4f, 0.7f, 0.3f, 1.0f }; // frog green
    
    Point[] corner;
@@ -40,16 +40,14 @@ public class BedSpread
             
             bed[i][j] = new Point( x, y, z );
             
-            double nx = 1.6 * Math.cos( 4*x);
-            double ny = 1.6 * Math.cos( 4*y);
+            double nx = - 1.6 * Math.cos( 4*x);
+            double ny = - 1.6 * Math.cos( 4*y);
             double nz = 1;
-            float[] nf = new float[3];
-            nf[0] = (float)nx; nf[1] = (float)ny; nf[2] = (float)nz;
-            V3 normy = new V3(nf );
+            V3 normy = new V3( nx, ny ,nz );
             normy.normalize();
             
             normals[i][j] = normy;
-            //normy.
+         
          }
       }
    }
@@ -63,13 +61,13 @@ public class BedSpread
       //gl.glTranslated(-0.5, -0.5, -0.5 ); // center the cube on the origin
             
       gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, forest, 0);
-
+      gl.glMaterialf( GL.GL_FRONT, GL2.GL_SHININESS, 500.0f );
+      
       for ( int i=0; i<gridSize; i++ )
       {
          for ( int j=0; j<gridSize; j++ )
          {
-            //gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, forest, 0);
-            gl.glNormal3fv( up, 0 );
+            //gl.glNormal3fv( up, 0 );
             gl.glBegin( GL2.GL_POLYGON);
             
             gl.glNormal3fv( normals[i][j].getv() );
@@ -82,7 +80,6 @@ public class BedSpread
             gl.glVertex3fv( bed[i][j+1].getv() );
             gl.glEnd();
           
-            //gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, frog, 0);
             gl.glBegin( GL2.GL_POLYGON);
             
             gl.glNormal3fv( normals[i+1][j].getv() );
