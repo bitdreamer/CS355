@@ -11,6 +11,12 @@ import flat.Dot;
 
 public class Cube
 {
+   
+   float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
+   float green[] = { 0.0f, 1.0f, 0.3f, 1.0f }; // green ish
+   float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f};
+   float white[] = { 1.0f, 1.0f, 1.0f, 1.0f};
+
    Point[] corner;
    float[] na = {  0,  0,  1, 0 };
    float[] nb = {  1,  0,  0, 0 };
@@ -43,9 +49,19 @@ public class Cube
       gl.glPushMatrix();
       gl.glTranslated(-0.5, -0.5, -0.5 ); // center the cube on the origin
       
+      // This has shininess added, doesn't work great yet ...
+      gl.glMaterialf(GL.GL_FRONT, GL2.GL_SHININESS, 100f );
+      
+      gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, blue, 0);
+      gl.glMaterialfv( GL.GL_FRONT, GL2.GL_SPECULAR, white, 0 );
+      
       face( gl, 1,5,7,3,na );
       face( gl, 4,6,7,5,nb );
       face( gl, 7,6,2,3,nc );
+      
+      gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, green, 0);
+      gl.glMaterialfv( GL.GL_FRONT, GL2.GL_SPECULAR, white, 0 );
+      
       face( gl, 1,0,4,5,nd );
       face( gl, 1,3,2,0,ne );
       face( gl, 0,2,6,4,nf );

@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 public class Sierpinski extends JFrame implements GLEventListener, MouseListener{
 	
 	//Class variables
-	int depth = 0;
+	int depth = 5;
 	private GLU glu = new GLU();
 	
 	//Select three points for the main triangle

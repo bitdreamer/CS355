@@ -1,4 +1,4 @@
-// Twirly4.java
+// Surface.java
 // Barrett Koster 2014
 // This file is a template for doing 3D drawings in OpenGL.  
 // This also does animation.
@@ -14,13 +14,15 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import com.jogamp.opengl.util.*;
  
-public class Twirly4  extends JFrame implements GLEventListener // ActionListener,
+public class Surface  extends JFrame implements GLEventListener // ActionListener,
    // , MouseListener
 {
    private GLU glu = new GLU(); // just has some function we like
    Animator goThingy;
-   final Twirly4 thisthis; // for use in contexts where "this" doesn't work
+   final Surface thisthis; // for use in contexts where "this" doesn't work
    double yrot = 0;
+   
+   BedSpread bed;
    
    GLCanvas glcanvas;
    
@@ -57,10 +59,10 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
    
     public static void main(String[] args) 
     {
-       new Twirly4();
+       new Surface();
     }
     
-    public Twirly4()
+    public Surface()
    {      
       GLProfile profile = GLProfile.get(GLProfile.GL2);
       GLCapabilities capabilities = new GLCapabilities(profile);
@@ -74,6 +76,7 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
       goThingy.start();
 
       cube1 = new Cube();
+      bed = new BedSpread();
       
       buttons = new ControlStuff4( ) ;
       cameraAngleX = buttons.addControl("cam look down",20,1);
@@ -86,13 +89,6 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
       wholeModelAngleX = buttons.addControl("whole rot x", 0, 1 );
       wholeModelAngleY = buttons.addControl("whole rot y", 0, 1 );
       
-      bigCubeAngleX = buttons.addControl("big cube rot x", 0, 1);
-      bigCubeAngleY = buttons.addControl("big cube rot y", 0, 1);
-      
-      cubieAngleX = buttons.addControl("cubies rot x",0,1);
-      cubieAngleY = buttons.addControl("cubies rot y",0,1);
-      
-      setOfCubiesAngleZ = buttons.addControl("cloud z",0,1);
       
       zoom = buttons.addControl("zoom", 2, 0.01 );
       
@@ -149,39 +145,12 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
        // gl.glTranslatef(-1.5f, 0.0f, -6.0f);
            
         gl.glPushMatrix();
-        gl.glRotated( bigCubeAngleX.q, 1, 0, 0 );   
-        gl.glRotated( bigCubeAngleY.q, 0, 1, 0 );   
+  
         cube1.drawMe(gl); // big center cube
+        bed.drawMe(gl);
         gl.glPopMatrix();
        // gl.glSc
         
-        for ( int i=-1; i<2; i += 2 )
-        {
-           for ( int j=-1; j<2; j += 2 )
-           {
-              for ( int k=-1; k<2; k += 2 )
-              {
-             
-                 //push
-                 gl.glPushMatrix();
-                 
-                 // rotates the set of cubies 
-                 gl.glRotated( setOfCubiesAngleZ.q, 0, 0, 1 );
-                 
-                 gl.glTranslated( i, j, k );
-                 gl.glRotated( -setOfCubiesAngleZ.q, 0, 0, 1 );
-                 gl.glRotated( cubieAngleY.q, 0, 1, 0 ); // twirls cubies
-                 gl.glRotated( cubieAngleX.q, 1, 0, 0 );
-                 
-                 gl.glScaled(  .2, .2, .2 );
-                 
-                 cube1.drawMe(gl);
-                 // pop
-                 gl.glPopMatrix();
-              }
-           }
-           
-        }
         
         gl.glFlush();
    }

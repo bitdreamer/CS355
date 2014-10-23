@@ -31,11 +31,12 @@ public class Point
    
    public float[] getf()
    {
-      float [] w = new float[3];
+      float [] w = new float[4];
       
       w[0] = (float)(x[0]);
       w[1] = (float)(x[1]);
       w[2] = (float)(x[2]);
+      w[3] = 1.0f;
       
       return w;
    }

@@ -7,8 +7,10 @@ package threed;
 
 public class Snap
 {
-   double[] par;
-   int len = 30;
+   double[] par; // the list of values of all the BPs for one
+                 // moment in time.
+   int len = 30; // hopefully bigger than the number of BPs on
+                 // the control panel.
    
    // constructor
    public Snap()
