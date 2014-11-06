@@ -21,6 +21,16 @@ public class Point
       x = new double[3];
       x[0] = x[1] = x[2] = 0.0f;
    }
+   
+   public Point( Point z )
+   {
+      x = new double[3];
+      x[0] = z.x[0];
+      x[1] = z.x[1];
+      x[2] = z.x[2];
+     
+   }
+   
    public Point( double a, double b, double c)
    {
       x = new double[3];

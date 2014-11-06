@@ -36,6 +36,14 @@ public class V3
        w[0] = (float)x; w[1] = (float) y; w[2] = (float)z; 
     }
     
+    public V3 ( V3 copyThis )
+    {
+       w = new float[3];
+       w[0] = copyThis.w[0];
+       w[1] = copyThis.w[1];
+       w[2] = copyThis.w[2];
+    }
+    
     
     // minus.  returns c = this-b
     public V3 minus( V3 b )
@@ -43,6 +51,12 @@ public class V3
         V3 c = new V3( w ); // copy values from this V3 to c
         for ( int i=0; i<3; i++ ) { c.w[i] -= b.w[i]; } // subtract b values
         return c;
+    }
+    
+    // add.  adds b into THIS vector
+    public void add( V3 b )
+    {      
+        for ( int i=0; i<3; i++ ) { w[i] += b.w[i]; } // subtract b values
     }
     
     // cross.  returns new V3 which is ( this X z ).
