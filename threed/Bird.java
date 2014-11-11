@@ -7,15 +7,19 @@ import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
+import java.util.*;
+
 import flat.Dot;
 
 public class Bird
 {
+   protected static LinkedList <Bird> murder;
    
    float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
    float green[] = { 0.0f, 1.0f, 0.3f, 1.0f }; // green ish
    float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f};
    float white[] = { 1.0f, 1.0f, 1.0f, 1.0f};
+   float yellow[] = { 1.0f, 1.0f, 0.4f };
 
    Point[] corner;
    
@@ -25,11 +29,13 @@ public class Bird
 
    public Bird()
    {
+      murder.add(this);
+      
       corner = new Point[3];
       
-      corner[0] = new Point( 0, 0, 0 );
-      corner[1] = new Point( -1, 0, -1 );
-      corner[2] = new Point( -1, 0, 1 );
+      corner[0] = new Point( 1, 0, 0 );
+      corner[1] = new Point( -1, 0, -0.3 );
+      corner[2] = new Point( -1, 0, 0.3 );
       
       velocity = new V3( 0.1, 0.1, 0.0 );
       position = new V3( );
@@ -47,13 +53,30 @@ public class Bird
       change.mult( 0.2 );
       velocity.add( change );
       
+      //velocity.w[1] = 0; // hack to make it fly flat for debugging
+      
       // make velocity point toward home moreso if we
       // are far away from home (0,0,0).
-      if ( position.magsq() > 5 )
+      if ( position.magsq() > 10 )
       {
          change = new V3( position);
          change.mult( -0.02 );
          velocity.add(change);
+      }
+      
+      // match velocity of nearby birds (1/dist^2)
+      Iterator <Bird> it = murder.iterator();
+      while ( it.hasNext() )
+      {
+         Bird b = it.next();
+         
+         V3 distv = b.position.minus( position );
+         double dist2 = distv.magsq();
+         if ( dist2 <1 ) { dist2 = 1;}
+         
+         V3 vel = new V3( b.velocity );
+         vel.mult( 1/dist2 * 0.01);
+         velocity.add( vel );
       }
       
       
@@ -61,6 +84,9 @@ public class Bird
       V3  dx = new V3( velocity );
       dx.mult( deltat );
       position.add( dx );
+      
+      
+      
    }
    
    public void drawMe( GL2 gl )
@@ -71,11 +97,14 @@ public class Bird
       gl.glPushMatrix();
       gl.glTranslatef( position.w[0],position.w[1],position.w[2] ); 
 
+      double angle = Math.atan2( -velocity.w[2], velocity.w[0] );
+      
+      gl.glRotated( angle*57.2957795 , 0, 1, 0 );
       
       // This has shininess added, doesn't work great yet ...
       gl.glMaterialf(GL.GL_FRONT, GL2.GL_SHININESS, 100f );
       
-      gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, blue, 0);
+      gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, yellow, 0);
       gl.glMaterialfv( GL.GL_FRONT, GL2.GL_SPECULAR, white, 0 );
       
       face( gl, 0, 1, 2,norm );

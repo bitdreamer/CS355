@@ -61,8 +61,8 @@ public class Sphere
             double z = r * Math.sin(beta) * Math.sin(alpha);
             
             water[i][j] = new Point(x,y,z);
-            up[i][j] = new V3( water[i][j].x[0], water[i][j].x[1], 
-                             water[i][j].x[2] );
+            up[i][j] = new V3( water[i][j].w[0], water[i][j].w[1], 
+                             water[i][j].w[2] );
             up[i][j].normalize();
          }
       }

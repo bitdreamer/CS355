@@ -15,6 +15,8 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
 import com.jogamp.opengl.util.*;
+
+import java.util.*;
  
 public class Flock  extends JFrame implements GLEventListener, 
     ActionListener
@@ -42,27 +44,17 @@ public class Flock  extends JFrame implements GLEventListener,
    javax.swing.Timer clicky;
    long lastTime;
    
-   /*
-   BP wholeModelAngleX; //tumbles the whole model toward us
-   BP wholeModelAngleY; // spins the whole model around a vertical axis
-   
-   BP bigCubeAngleX; // flips big center cube over toward you
-   BP bigCubeAngleY; // rotate around verticle axis
-   
-   BP cubieAngleX; // flips the little corner cubies 
-   BP cubieAngleY;
-   
-   BP setOfCubiesAngleZ;
-   */
    BP zoom; // controls the cameral angle width
    
    
    ControlStuff4 buttons;
   // javax.swing.Timer timey;
    
-   Bird bird1;
+   //Bird bird1;
    Bird[] birds;
    int birdCount = 20;
+   
+   Cage cage1;
    
     public static void main(String[] args) 
     {
@@ -82,20 +74,23 @@ public class Flock  extends JFrame implements GLEventListener,
       goThingy = new Animator( glcanvas );
       goThingy.start();
 
-      bird1 = new Bird();
+      //bird1 = new Bird();
+      Bird.murder = new LinkedList <Bird>();
       birds = new Bird[birdCount];
       for ( int i=0; i<birdCount; i++ )
       {
           birds[i] = new Bird();
+          
       }
+      cage1 = new Cage();
       
       buttons = new ControlStuff4( ) ;
-      cameraAngleX = buttons.addControl("cam look down",10,1);
+      cameraAngleX = buttons.addControl("cam look down",40,1);
       cameraAngleY = buttons.addControl("cam pan right",-12,1);
       cameraAngleZ = buttons.addControl("cam tilt right",0,1);
       cameraX = buttons.addControl("cam x",5,0.01);
-      cameraY = buttons.addControl("cam y",2, 0.01);
-      cameraZ = buttons.addControl("cam z",20, 0.01);
+      cameraY = buttons.addControl("cam y",10, 0.01);
+      cameraZ = buttons.addControl("cam z",10, 0.01);
       
       clicky = new javax.swing.Timer( 100, this );
       clicky.start();
@@ -103,18 +98,6 @@ public class Flock  extends JFrame implements GLEventListener,
       Date date = new Date(); // now
       lastTime = date.getTime(); // set lastTime to now
       
-      /*
-      wholeModelAngleX = buttons.addControl("whole rot x", 0, 1 );
-      wholeModelAngleY = buttons.addControl("whole rot y", 0, 1 );
-      
-      bigCubeAngleX = buttons.addControl("big cube rot x", 0, 1);
-      bigCubeAngleY = buttons.addControl("big cube rot y", 0, 1);
-      
-      cubieAngleX = buttons.addControl("cubies rot x",0,1);
-      cubieAngleY = buttons.addControl("cubies rot y",0,1);
-      
-      setOfCubiesAngleZ = buttons.addControl("cloud z",0,1);
-      */
       zoom = buttons.addControl("zoom", 2, 0.01 );
       
       thisthis = this;
@@ -172,12 +155,13 @@ public class Flock  extends JFrame implements GLEventListener,
         gl.glPushMatrix();
         //gl.glRotated( bigCubeAngleX.q, 1, 0, 0 );   
         //gl.glRotated( bigCubeAngleY.q, 0, 1, 0 );   
-        bird1.drawMe(gl); // big center cube
+        //bird1.drawMe(gl); // big center cube
         
         for ( int i=0; i<birdCount; i++ )
         {
             birds[i].drawMe(gl);
         }
+        cage1.drawMe(gl);
 
         gl.glPopMatrix();
        // gl.glSc
@@ -279,7 +263,7 @@ public class Flock  extends JFrame implements GLEventListener,
       // time since last update in seconds
       double deltat = (current - lastTime)/1000.0; 
       
-      bird1.move(deltat);
+      //bird1.move(deltat);
       for ( int i=0; i<birdCount; i++ )
       {
           birds[i].move(deltat);

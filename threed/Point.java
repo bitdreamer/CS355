@@ -7,48 +7,47 @@ package threed;
 
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.*;
-import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.GLU;
-
+//import javax.media.opengl.*;
+//import javax.media.opengl.awt.GLCanvas;
+//import javax.media.opengl.glu.GLU;
 
 public class Point
 {
-   double[] x;
+   double[] w;
    
    public Point()
    {
-      x = new double[3];
-      x[0] = x[1] = x[2] = 0.0f;
+      w = new double[3];
+      w[0] = w[1] = w[2] = 0.0f;
    }
    
    public Point( Point z )
    {
-      x = new double[3];
-      x[0] = z.x[0];
-      x[1] = z.x[1];
-      x[2] = z.x[2];
+      w = new double[3];
+      w[0] = z.w[0];
+      w[1] = z.w[1];
+      w[2] = z.w[2];
      
    }
    
    public Point( double a, double b, double c)
    {
-      x = new double[3];
-      x[0] = a;
-      x[1] = b;
-      x[2] = c;
+      w = new double[3];
+      w[0] = a;
+      w[1] = b;
+      w[2] = c;
    }
    
    public float[] getf()
    {
-      float [] w = new float[4];
+      float [] z = new float[4];
       
-      w[0] = (float)(x[0]);
-      w[1] = (float)(x[1]);
-      w[2] = (float)(x[2]);
-      w[3] = 1.0f;
+      z[0] = (float)(w[0]);
+      z[1] = (float)(w[1]);
+      z[2] = (float)(w[2]);
+      z[3] = 1.0f;
       
-      return w;
+      return z;
    }
    public FloatBuffer getv()
    {
@@ -59,5 +58,9 @@ public class Point
       return v;
    }
    
-  
+   // add v onto this point
+   public void add( V3 v )
+   {
+      for ( int i=0; i<3; i++ ) { w[i] += v.w[i]; }
+   }
 }
