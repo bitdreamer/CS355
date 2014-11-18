@@ -42,6 +42,7 @@ public class Flock  extends JFrame implements GLEventListener,
    BP cameraZ;
    
    javax.swing.Timer clicky;
+   javax.swing.Timer launch;
    long lastTime;
    
    BP zoom; // controls the cameral angle width
@@ -76,9 +77,12 @@ public class Flock  extends JFrame implements GLEventListener,
 
       //bird1 = new Bird();
       Bird.murder = new LinkedList <Bird>();
+      Bird.murderCount = 0;
       birds = new Bird[birdCount];
-      for ( int i=0; i<birdCount; i++ )
+      birds[0] = new LeaderBird();
+      for ( int i=1; i<birdCount; i++ )
       {
+ 
           birds[i] = new Bird();
           
       }
@@ -94,6 +98,9 @@ public class Flock  extends JFrame implements GLEventListener,
       
       clicky = new javax.swing.Timer( 100, this );
       clicky.start();
+      
+      launch = new javax.swing.Timer(5000, this);
+      launch.start();
       
       Date date = new Date(); // now
       lastTime = date.getTime(); // set lastTime to now
@@ -271,6 +278,16 @@ public class Flock  extends JFrame implements GLEventListener,
 
       
       lastTime = current;
+      
+      if(e.getSource()==launch)
+      {
+    	  for (int i=0; i<birdCount; i++)
+    	  {
+    		  birds[i].launcher(true);
+    	  }
+    	  
+    	  launch.stop();
+      }
    }
    
 

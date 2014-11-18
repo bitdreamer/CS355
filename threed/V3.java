@@ -72,6 +72,11 @@ public class V3
         return c;
     }
     
+    public void replace(V3 r)
+    {
+    	w=r.w;
+    }
+    
        // normalize.  scale vector so its length is one.
     // does nothing if length is 0.
     public double normalize()
@@ -100,6 +105,39 @@ public class V3
     {
         int i;
         for ( i=0; i<3; i++ ) { w[i] *= k; }
+    }
+    
+    public void adjust(V3 g)
+    {
+    	for ( int i=0; i<3; i++ ) 
+    	{ 
+    		/*if(g.w[i]>1)
+    		{
+    			if(w[i]>1)
+    			{
+    				w[i]+=g.w[i];
+    			}
+    			else
+    			{
+    				w[i]=(float)-0.7*w[i];
+    			}
+    		}
+    		else
+    		{
+    			if(w[i]<1)
+    			{
+    				w[i]+=g.w[i];
+    			}
+    			else
+    			{
+    				w[i]=(float)-0.7*w[i];
+    			}
+    		}*/
+    		
+    		
+    		//w[i] += ((float)0.9*g.w[i]-(float)0.1*w[i]); 
+    		w[i] +=g.w[i]/w[i];
+    	}
     }
     
     
