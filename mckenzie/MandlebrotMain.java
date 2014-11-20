@@ -2,6 +2,9 @@ package mckenzie;
 
 //z = z^2 + c
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -10,12 +13,24 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
-public class MandlebrotMain extends JFrame implements GLEventListener
+public class MandlebrotMain extends JFrame implements GLEventListener, MouseListener, MouseMotionListener
 {
 	private GLU glu = new GLU();
 	Mandlebrot m1;
 	Dot c = new Dot();
-	int dwell = 500;
+	int dwell = 100;
+	GLProfile profile = GLProfile.get(GLProfile.GL2);
+	GLCapabilities capabilities = new GLCapabilities(profile);
+
+	// The canvas is the widget that's drawn in the JFrame
+	GLCanvas glcanvas = new GLCanvas(capabilities);
+
+	double xmin=-2, xmax=2, ymin=-2, ymax=2;
+	int wid=500, hit=500;
+
+	int mouseDownX=0, mouseDownY=0; // where you click the mouse
+	int mouseX=500, mouseY=500;  // where you drag the mouse
+	float white[] = { 1.0f, 1.0f, 1.0f, 1.0f};
 
 	public static void main(String[] args) 
 	{
@@ -24,18 +39,19 @@ public class MandlebrotMain extends JFrame implements GLEventListener
 
 	public MandlebrotMain()
 	{
-		setTitle("Mandlebrot");
-		GLProfile profile = GLProfile.get(GLProfile.GL2);
-		GLCapabilities capabilities = new GLCapabilities(profile);
 
-		// The canvas is the widget that's drawn in the JFrame
-		GLCanvas glcanvas = new GLCanvas(capabilities);
+
+		setTitle("Mandlebrot");
+
 		glcanvas.addGLEventListener(this);
+		glcanvas.addMouseListener(this);
+		glcanvas.addMouseMotionListener(this);
 		glcanvas.setSize( 500, 500 );
 		getContentPane().add( glcanvas);
 		setSize( getContentPane().getPreferredSize() );
 
 		m1 = new Mandlebrot();
+
 
 		setVisible( true );
 	}
@@ -54,7 +70,27 @@ public class MandlebrotMain extends JFrame implements GLEventListener
 
 
 		m1.drawMe(c, dwell, gl);
+
+
+		gl.glColor3f( 1.0f, 1.0f, 1.0f );
+
+		gl.glBegin( GL2.GL_LINE_LOOP);
+		float mdX =  (float)(xScreen2Model(mouseDownX));
+		float mX =  (float)(xScreen2Model(mouseX));
+		float mdY =  (float)(yScreen2Model(mouseDownY));
+		float mY =  (float)(yScreen2Model(mouseY));
+
+		// snap box
+		gl.glVertex2f( mdX, mdY );
+		gl.glVertex2f( mX, mdY );
+		gl.glVertex2f( mX, mY );
+		gl.glVertex2f( mdX, mY );
+		gl.glEnd();
+		
+		
 		gl.glFlush();
+		
+		//glcanvas.reshape(mouseDownX, mouseDownY, mouseX, mouseY);
 	}
 
 	public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged) 
@@ -83,19 +119,77 @@ public class MandlebrotMain extends JFrame implements GLEventListener
 		final float h = (float) width / (float) height; // aspect ration
 
 		gl.glViewport(0, 0, width, height);
+		//gl.glViewport(mouseDownX, mouseDownY, mouseX, mouseY);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 
 		// glu.gluPerspective(45.0f, h, 1.0, 20.0);
-		glu.gluOrtho2D( -2, 2, -2, 2 );
+		//glu.gluOrtho2D( -2, 2, -2, 2 );
+		//glu.gluOrtho2D( xScreen2Model(mouseDownX), yScreen2Model(mouseDownY),xScreen2Model(mouseX), yScreen2Model(mouseY) );
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
 
-
 	public void dispose(GLAutoDrawable arg0) 
 	{
 		System.out.println("dispose() called");
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		System.out.println("mouse clicked");
+		glcanvas.display();
+	}
+
+	public void mouseEntered(MouseEvent e) {
+
+	}
+
+	public void mouseExited(MouseEvent e) {
+
+	}
+
+	public void mousePressed(MouseEvent e) {
+		System.out.println("mouse pressed");
+		mouseDownX = e.getX();
+		mouseDownY = e.getY();  
+
+	}
+
+	public void mouseReleased(MouseEvent e) {
+		//System.out.println("aojdfa");
+		glcanvas.display();
+		//glcanvas.zoom();
+	}
+
+	public void mouseDragged(MouseEvent e) {
+		System.out.println("mouse dragged");
+		mouseX = e.getX(); mouseY = e.getY();
+		glcanvas.display();
+
+
+	}
+
+	public void mouseMoved(MouseEvent e) {
+
+
+	}
+
+	public double xScreen2Model( int xScreen )
+	{
+		double xModel = 0;
+
+		xModel = (1.0*xScreen)/wid * (xmax-xmin ) + xmin ;
+
+		return xModel;    
+	}
+
+	public double yScreen2Model( int yScreen )
+	{
+		double yModel = 0;
+
+		yModel = ymax - (1.0*yScreen)/hit * (ymax-ymin ) ;
+
+		return yModel;    
 	}
 
 }
