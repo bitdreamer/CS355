@@ -29,7 +29,8 @@ public class MandelbrotFinallyFinal extends JFrame implements GLEventListener
  
     public MandelbrotFinallyFinal() 
     {
-    	setTitle("MandelbrotFinal");
+       setDefaultCloseOperation(EXIT_ON_CLOSE) ;
+    	 setTitle("MandelbrotFinal");
 		
 		 GLProfile profile = GLProfile.get(GLProfile.GL2);
 		 GLCapabilities capabilities = new GLCapabilities(profile);
@@ -123,7 +124,7 @@ public class MandelbrotFinallyFinal extends JFrame implements GLEventListener
          gl.glLoadIdentity();
 
          // glu.gluPerspective(45.0f, h, 1.0, 20.0);
-         glu.gluOrtho2D( -2, 2, -2, 2 );
+         glu.gluOrtho2D( -2*h, 2*h, -2, 2 );
          gl.glMatrixMode(GL2.GL_MODELVIEW);
          gl.glLoadIdentity();
     }

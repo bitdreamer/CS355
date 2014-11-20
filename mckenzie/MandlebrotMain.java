@@ -124,7 +124,7 @@ public class MandlebrotMain extends JFrame implements GLEventListener, MouseList
 		gl.glLoadIdentity();
 
 		// glu.gluPerspective(45.0f, h, 1.0, 20.0);
-		//glu.gluOrtho2D( -2, 2, -2, 2 );
+		glu.gluOrtho2D( -2, 2, -2, 2 );
 		//glu.gluOrtho2D( xScreen2Model(mouseDownX), yScreen2Model(mouseDownY),xScreen2Model(mouseX), yScreen2Model(mouseY) );
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
