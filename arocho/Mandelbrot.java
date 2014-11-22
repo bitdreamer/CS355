@@ -108,9 +108,9 @@ public class Mandelbrot extends JFrame implements GLEventListener{
 					else{
 						gl.glBegin (GL.GL_POINTS);
 							//funky colors
-							float red = (n*13)/255;
-							float green = (n*16)/255;
-							float blue = (n*19)/255;
+							float red = (n*13)%255/255.0f;
+							float green = (n*16)%255/255.0f;
+							float blue = (n*19)%255/255.0f;
 							gl.glColor3f (red, green, blue);
 							gl.glVertex2f(x,y);
 							gl.glEnd ();
@@ -155,27 +155,6 @@ public class Mandelbrot extends JFrame implements GLEventListener{
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 	}
-	
-		// From Mousing.java 
-		//These convert pixels to model coords so we can draw.  
-		// They are not quite right ... missing an offset or something.
-	   public double xScreen2Model( int xScreen )
-	   {
-	      double xModel = 0;
-	      
-	      xModel = (1.0*xScreen)/wid * (xmax-xmin ) + xmin ;
-	      
-	      return xModel;    
-	   }
-
-	   public double yScreen2Model( int yScreen )
-	   {
-	      double yModel = 0;
-	      
-	      yModel = ymax - (1.0*yScreen)/hit * (ymax-ymin ) ;
-	      
-	      return yModel;    
-	   }
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {}

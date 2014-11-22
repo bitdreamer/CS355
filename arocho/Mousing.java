@@ -34,7 +34,7 @@ public class Mousing extends JFrame implements GLEventListener
     
     public Mousing()
    {
-      setTitle("TwoTemplate");
+      setTitle("Mousing");
       GLProfile profile = GLProfile.get(GLProfile.GL2);
       GLCapabilities capabilities = new GLCapabilities(profile);
  
@@ -52,7 +52,7 @@ public class Mousing extends JFrame implements GLEventListener
  
     }
     
-   // display().  Note that this fuction and most (all?) of the rest are 
+   // display().  Note that this function and most (all?) of the rest are 
     // handlers for the GLEventlistener interface.
     // display() is the main on that gets called to draw your stuff.  
     // The argument glDrawable is the context for drawing; the windows system

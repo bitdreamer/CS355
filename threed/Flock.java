@@ -79,7 +79,7 @@ public class Flock  extends JFrame implements GLEventListener,
       Bird.murder = new LinkedList <Bird>();
       Bird.murderCount = 0;
       birds = new Bird[birdCount];
-      birds[0] = new LeaderBird();
+      //birds[0] = new LeaderBird();
       for ( int i=1; i<birdCount; i++ )
       {
  

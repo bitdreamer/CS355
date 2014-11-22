@@ -12,7 +12,6 @@ import javax.media.opengl.glu.GLU;
 
 public class Fly
 {
-   
    Dot myDot;
    
    public Fly( double x1, double y1)
@@ -26,18 +25,19 @@ public class Fly
       gl.glColor4fv(blue, 0);      
 
       float[] w = myDot.getf();  
-
+      
+      //One triangle
       gl.glBegin(GL2.GL_POLYGON);     
       gl.glVertex2f( w[0], w[1]  ); // given Dot
       gl.glVertex2f( (float)(w[0]+0.2), w[1]  ); // given Dot
       gl.glVertex2f( w[0], (float)(w[1]+0.2)  ); // given Dot
-     gl.glEnd();
-     gl.glBegin(GL2.GL_POLYGON);     
-     gl.glVertex2f( w[0], w[1]  ); // given Dot
-     gl.glVertex2f( (float)(w[0]-0.2), w[1]  ); // given Dot
-     gl.glVertex2f( w[0], (float)(w[1]-0.2)  ); // given Dot
-    gl.glEnd();
-            
+      gl.glEnd();
+      
+      //Other triangle
+      gl.glBegin(GL2.GL_POLYGON);     
+      gl.glVertex2f( w[0], w[1]  ); // given Dot
+      gl.glVertex2f( (float)(w[0]-0.2), w[1]  ); // given Dot
+      gl.glVertex2f( w[0], (float)(w[1]-0.2)  ); // given Dot
+      gl.glEnd();        
    }
-
 }
