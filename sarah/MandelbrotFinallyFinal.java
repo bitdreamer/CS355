@@ -21,6 +21,10 @@ public class MandelbrotFinallyFinal extends JFrame implements GLEventListener
     private double cenX;
     private double cenY;
     private double tmp;
+    
+    int windowWidth = 700;
+    int windowHeight = 700; 
+    
     public static void main(String[] args)
 	{
 		new MandelbrotFinallyFinal();
@@ -38,7 +42,7 @@ public class MandelbrotFinallyFinal extends JFrame implements GLEventListener
 
 		 glcanvas.addGLEventListener(this);
 
-		 glcanvas.setSize(500, 500);
+		 glcanvas.setSize(windowWidth, windowHeight);
 		 getContentPane().add(glcanvas);
 		 setSize(getContentPane().getPreferredSize());
 
@@ -55,9 +59,9 @@ public class MandelbrotFinallyFinal extends JFrame implements GLEventListener
     }
     public void drawMandelbrot(GL2 gl)
     {
-    	for (int y = 0; y < 700; y++) // initial y value
+    	for (int y = 0; y < windowHeight; y++) // initial y value
     	{
-            for (int x = 0; x < 700; x++) // initial x value
+            for (int x = 0; x < windowWidth; x++) // initial x value
             {
                 xvalue = yvalue = 0; // They start at zero
                 // Change in x and y
@@ -81,9 +85,9 @@ public class MandelbrotFinallyFinal extends JFrame implements GLEventListener
                     else
         			{
         				gl.glBegin(GL.GL_POINTS);
-        				float red = (iter*12)/255;
-        				float green = (iter*17)/255;
-        				float blue = (iter*18)/255;
+        				float red = (float)((iter*12%255)/255.0);
+        				float green = (float)((iter*17%255)/255.0);
+        				float blue = (float)((iter*18%255)/255.0);
         				gl.glColor3f(red, green, blue);
         				gl.glVertex2f((float)cenX,(float)cenY);
         				gl.glEnd();
@@ -117,7 +121,7 @@ public class MandelbrotFinallyFinal extends JFrame implements GLEventListener
              height = 1;
          }
 
-         final float h = (float) width / (float) height; // aspect ration
+         final float h = (float) width / (float) height; // aspect ratio
 
          gl.glViewport(0, 0, width, height);
          gl.glMatrixMode(GL2.GL_PROJECTION);
