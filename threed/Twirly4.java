@@ -22,6 +22,8 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
    final Twirly4 thisthis; // for use in contexts where "this" doesn't work
    double yrot = 0;
    
+   double aspectRatio = 1;
+   
    GLCanvas glcanvas;
    
    float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
@@ -126,7 +128,7 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
         // glu.gluPerspective(45.0f, h, 1.0, 20.0);
-        gl.glFrustum( -zoom.q, zoom.q, -zoom.q ,zoom.q, 4, 20 );
+        gl.glFrustum( -zoom.q*aspectRatio, zoom.q*aspectRatio, -zoom.q ,zoom.q, 4, 20 );
 
         gl.glRotated(cameraAngleZ.q,0,0,1); // tilt the frame
         gl.glRotated(cameraAngleX.q, 1, 0, 0 ); // look down or up
@@ -195,7 +197,7 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
    {
       System.out.println("init() called");
         GL2 gl = gLDrawable.getGL().getGL2();
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        gl.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL2.GL_FLAT);
    }
 
@@ -209,7 +211,7 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
             height = 1;
         }
 
-        final float h = (float) width / (float) height; // aspect ration
+        aspectRatio = (float) width / (float) height; // aspect ratio
 
         gl.glViewport(0, 0, width, height);
 

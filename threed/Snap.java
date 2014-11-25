@@ -5,12 +5,16 @@
 
 package threed;
 
+import java.util.*;
+
 public class Snap
 {
    double[] par; // the list of values of all the BPs for one
                  // moment in time.
    int len = 30; // hopefully bigger than the number of BPs on
                  // the control panel.
+   
+   static int parCount=0; // this is really how many parameters there are
    
    // constructor
    public Snap()
@@ -28,6 +32,17 @@ public class Snap
       }
    }
    
+   public Snap (String s )
+   {
+      StringTokenizer st = new StringTokenizer( s );
+      par = new double[len];
+      for ( int i=0; i<parCount; i++ )
+      {
+         par[i] = Double.parseDouble(st.nextToken());
+      }
+      
+   }
+   
    // interpolate
    // When frac=0, set to a; when frac is 1 set to b.
    // interpolate smoothly between those
@@ -37,5 +52,17 @@ public class Snap
       {
          par[i] = a.par[i]*(1-frac) + b.par[i]*frac;
       }
+   }
+   
+   public String report()
+   {
+      String theReport="";
+      
+      for ( int i=0; i<parCount; i++ )
+      {
+         theReport += " "+par[i];
+      }
+      
+      return theReport;
    }
 }
