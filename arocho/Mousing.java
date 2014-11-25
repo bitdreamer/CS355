@@ -75,10 +75,10 @@ public class Mousing extends JFrame implements GLEventListener
         gl.glColor3f( 1.0f, 1.0f, 1.0f );
 
         //Just the outline 
-        //gl.glBegin( GL2.GL_LINE_LOOP );
+        gl.glBegin( GL2.GL_LINE_LOOP );
         
         //Filled-in
-        gl.glBegin(GL2.GL_POLYGON);
+        //gl.glBegin(GL2.GL_POLYGON);
         float mdX = (float)(xScreen2Model(mouseDownX));
         float mX = (float)(xScreen2Model(mouseX));
         float mdY = (float)(yScreen2Model(mouseDownY));
@@ -151,7 +151,10 @@ public class Mousing extends JFrame implements GLEventListener
    
    
    // mouse methods
-   public void mouseReleased( MouseEvent m ) {}
+   public void mouseReleased( MouseEvent m ) {
+	   theFly = new Fly( xScreen2Model(mouseDownX), yScreen2Model(mouseDownY) );
+	   glcanvas.display();
+   }
    public void mouseEntered( MouseEvent m ) {}
    public void mousePressed( MouseEvent m ) {
 	   mouseDownX = m.getX();
@@ -168,10 +171,10 @@ public class Mousing extends JFrame implements GLEventListener
       //                   +yScreen2Model( m.getY())
       //                  );
       
-      theFly = new Fly( xScreen2Model(mouseDownX), yScreen2Model(mouseDownY) );
+      //theFly = new Fly( xScreen2Model(mouseDownX), yScreen2Model(mouseDownY) );
       // repaint();
       //gl.gluglutPostRedisplay();
-      glcanvas.display(); // this forces a redraw
+      //glcanvas.display(); // this forces a redraw
    }
    public void mouseMoved( MouseEvent m ) {}
    public void mouseDragged( MouseEvent m )
@@ -179,7 +182,7 @@ public class Mousing extends JFrame implements GLEventListener
       //System.out.println("mouse dragged to "+m.getX()+" "+m.getY());
       
      mouseX = m.getX(); mouseY = m.getY();
-          glcanvas.display();
+          //glcanvas.display();
    }
    
    
