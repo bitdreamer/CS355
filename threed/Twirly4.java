@@ -7,12 +7,14 @@ package threed;
 
 import java.awt.*;
 import java.awt.event.*; 
-import javax.swing.*;
 
+import javax.swing.*;
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
+
 import com.jogamp.opengl.util.*;
+import com.jogamp.opengl.util.gl2.GLUT;
  
 public class Twirly4  extends JFrame implements GLEventListener // ActionListener,
    // , MouseListener
@@ -21,6 +23,9 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
    Animator goThingy;
    final Twirly4 thisthis; // for use in contexts where "this" doesn't work
    double yrot = 0;
+   
+   GLUT glut;
+  
    
    double aspectRatio = 1;
    
@@ -76,6 +81,8 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
       goThingy.start();
 
       cube1 = new Cube();
+      
+      
       
       buttons = new ControlStuff4( ) ;
       cameraAngleX = buttons.addControl("cam look down",20,1);
@@ -184,6 +191,22 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
            }
            
         }
+        
+        // draws a sphere at the origin, size r=1.5,
+        glut = new GLUT(); // only do once
+        glut.glutSolidSphere(1.5f, 16, 8 );
+        
+        // smaller sphere lower down
+        gl.glPushMatrix();
+        gl.glTranslatef( 0, -2, 0 );
+        glut.glutSolidSphere( 1, 14, 6);
+        gl.glPopMatrix();
+        
+        gl.glPushMatrix();
+        gl.glTranslatef( 0, 2, 0 );
+        glut.glutWireTeapot( .5);
+        gl.glPopMatrix();
+
         
         gl.glFlush();
    }
