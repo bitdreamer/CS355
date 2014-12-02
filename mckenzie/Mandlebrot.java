@@ -8,33 +8,41 @@ public class Mandlebrot
 	int hopMax = 500;	//How many hops from center going to make
 	//More = more clear image, less blobish
 	
+	/*
 	//Start edge
 	float xmin = -2;
 	float ymin = -2;
+	*/
 	
 	//Width and height of area that will be colored
-	float w = 4;
-	float h = 4;
+	//float w = 4;
+	//float h = 4;
+	
 	
 	//End edge
-	float xmax = xmin + w;
-	float ymax = ymin + h;
+	//float xmax = xmin + w;
+	//float ymax = ymin + h;
 
 	public Mandlebrot()
 	{
 
 	}
 
-	public void drawMe(Dot c, int dwell, GL2 gl)
+	public void drawMe(int dwell, GL2 gl, float xmin, float ymin, float xmax, float ymax, int w, int h)
 	{
+		
+		
+		/*float xmax = xmin + w;
+		float ymax = ymin + h;*/
+		
 		//go through all points
 		//if diverge, black, else, white
 
 
 		//deltas - change of x and y each iteration
 		//increasing width and height increases precision
-		int width = 500;
-		int height = 500;
+		int width = w;
+		int height = h;
 		float deltax = (xmax - xmin) / width;
 		float deltay = (ymax - ymin) / height;
 		
