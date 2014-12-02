@@ -23,6 +23,7 @@ import java.io.*;
 
 public class ControlStuff4 extends JFrame implements ActionListener
 {
+   boolean bug = true;
    BP[] theBP;
    int theBPcount = 0;
    Snap[] path; // sequence of snapshots of scene position
@@ -125,7 +126,7 @@ public class ControlStuff4 extends JFrame implements ActionListener
       else if ( e.getSource()==snapButton   ) { path[pathCount++] = takeSnapShot();  }
       else if ( e.getSource()==goPathButton ) { doingPath = !doingPath; }
       else if ( e.getSource()==storeButton ) { storePath(); }
-      else if ( e.getSource()==storeButton ) { loadPath(); }
+      else if ( e.getSource()==loadButton ) { loadPath(); }
    }
    
    public void storePath()
@@ -163,6 +164,7 @@ public class ControlStuff4 extends JFrame implements ActionListener
    
    public void loadPath()
    {
+      if (bug) { System.out.println("ControlStuff4.loadPath ..."); }
       JFileChooser fc = new JFileChooser();
       try
       {
