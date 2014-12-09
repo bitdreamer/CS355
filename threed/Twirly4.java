@@ -202,6 +202,7 @@ public class Twirly4  extends JFrame implements GLEventListener // ActionListene
         glut.glutSolidSphere( 1, 14, 6);
         gl.glPopMatrix();
         
+        // teapot above the middle
         gl.glPushMatrix();
         gl.glTranslatef( 0, 2, 0 );
         glut.glutWireTeapot( .5);
