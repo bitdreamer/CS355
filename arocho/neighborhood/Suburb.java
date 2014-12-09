@@ -195,7 +195,7 @@ public class Suburb  extends JFrame implements GLEventListener
 		
 		car = new Car(drive.q, -2.9, 0);
 		gl.glPushMatrix();
-			car.drawMe(gl);
+		car.drawMe(gl);
 		gl.glPopMatrix();
 
 		gl.glFlush();

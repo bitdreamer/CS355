@@ -1,5 +1,5 @@
-// House.java
-// Barrett Koster 2014 for CS-355
+// Car.java
+// Arocho <3
 
 package arocho.neighborhood;
 
@@ -17,6 +17,8 @@ public class Car
 	//3D point arrays
 	Point[] main;
 
+	double x, y, z;
+
 	//normal vectors
 	float[] na = {  0,  0,  1, 0 };
 	float[] nb = {  1,  0,  0, 0 };
@@ -26,9 +28,16 @@ public class Car
 	float[] nf = {  0,  0, -1, 0 };
 
 	float blueColor[] = { 0.0f, 0.0f, 0.8f, 1.0f};
+	float blackColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	public Car(double x, double y, double z)
 	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+
+		glut = new GLUT();
+
 		main = new Point[8];
 
 		main[0] = new Point( x,   y+.1,   z );
@@ -44,11 +53,8 @@ public class Car
 	public void drawMe( GL2 gl)
 	{		
 		gl.glPushMatrix();
-		//gl.glTranslated(-0.5, -3, -0.5 ); // center the cube on the origin
-
 		// This has shininess added, doesn't work great yet ...
 		gl.glMaterialf(GL.GL_FRONT, GL2.GL_SHININESS, 100f );
-		
 		//Walls
 		gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, blueColor, 0);
 		face( gl, 1,5,7,3,na );
@@ -58,6 +64,8 @@ public class Car
 		face( gl, 1,3,2,0,ne );
 		face( gl, 0,2,6,4,nf );
 		gl.glPopMatrix();
+
+		drawWheels(gl);
 	}
 
 	public void face( GL2 gl, int a, int b, int c, int d, float[] n )
@@ -69,5 +77,29 @@ public class Car
 		gl.glVertex3fv( main[c].getv() );
 		gl.glVertex3fv( main[d].getv() );
 		gl.glEnd();
+	}
+
+	public void drawWheels(GL2 gl){
+		gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, blackColor, 0);
+
+		gl.glPushMatrix();
+		gl.glTranslated(x+.1, y+.11, z+.5);
+		glut.glutSolidTorus(.05, .1, 8, 8);
+		gl.glPopMatrix();
+
+		gl.glPushMatrix();
+		gl.glTranslated(x+.1, y+.11, z-.05);
+		glut.glutSolidTorus(.05, .1, 8, 8);
+		gl.glPopMatrix();
+
+		gl.glPushMatrix();
+		gl.glTranslated(x+.8, y+.11, z+.5);
+		glut.glutSolidTorus(.05, .1, 8, 8);
+		gl.glPopMatrix();
+
+		gl.glPushMatrix();
+		gl.glTranslated(x+.8, y+.11, z-.05);
+		glut.glutSolidTorus(.05, .1, 8, 8);
+		gl.glPopMatrix();
 	}
 }
