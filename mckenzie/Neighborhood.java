@@ -4,8 +4,8 @@
 
 package mckenzie;
 
-import java.awt.*;
 import java.awt.event.*; 
+import java.util.Date;
 
 import javax.swing.*;
 import javax.media.opengl.*;
@@ -14,13 +14,16 @@ import javax.media.opengl.glu.GLU;
 
 import com.jogamp.opengl.util.*;
 
-public class Neighborhood  extends JFrame implements GLEventListener
+public class Neighborhood  extends JFrame implements GLEventListener, ActionListener
 {
 	private GLU glu = new GLU(); // just has some function we like
 	Animator goThingy;
 	final Neighborhood thisthis; // for use in contexts where "this" doesn't work
 	double yrot = 0;
 
+	
+	
+	
 	GLCanvas glcanvas;
 
 	float red[] =   {1.0f,0.0f,0.0f,1.0f}; // color red
@@ -28,6 +31,9 @@ public class Neighborhood  extends JFrame implements GLEventListener
 	float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f};
 	float gray[] = {0.5f,0.5f,0.5f,1,0f}; //gray?
 
+	Truck truck = new Truck(red);
+	
+	
 	BP cameraAngleX; // tilt the direction of gaze down (or minus is up)
 	BP cameraAngleY; // pan left or right on camera
 	BP cameraAngleZ;
@@ -40,11 +46,16 @@ public class Neighborhood  extends JFrame implements GLEventListener
 	BP wholeModelAngleY; // spins the whole model around a vertical axis
 
 	BP zoom; // controls the cameral angle width
+	
+	BP truckGas;
+	BP truckTurn;
 
 	House houses[];
 
 	ControlStuff4 buttons;
-	// javax.swing.Timer timey;
+	
+	javax.swing.Timer clicky;
+	long lastTime;
 
 
 	public static void main(String[] args) 
@@ -54,8 +65,11 @@ public class Neighborhood  extends JFrame implements GLEventListener
 
 	public Neighborhood()
 	{      
+		setTitle("Neighborhood");
 		GLProfile profile = GLProfile.get(GLProfile.GL2);
 		GLCapabilities capabilities = new GLCapabilities(profile);
+		
+		
 		glcanvas = new GLCanvas(capabilities);
 		glcanvas.addGLEventListener(this);
 
@@ -115,26 +129,37 @@ public class Neighborhood  extends JFrame implements GLEventListener
 
 		for(int j = 0; j<30; j++)
 		{
-			//houses[j].drawMe(gl);
 			houses[j].report();
 		}
 
 
 		buttons = new ControlStuff4( ) ;
 		cameraAngleX = buttons.addControl("cam look down",20,1);
-		cameraAngleY = buttons.addControl("cam pan right",-12,1);
+		cameraAngleY = buttons.addControl("cam pan right",85,1);
 		cameraAngleZ = buttons.addControl("cam tilt right",0,1);
-		cameraX = buttons.addControl("cam x",1,0.01);
+		cameraX = buttons.addControl("cam x",-4,0.01);
 		cameraY = buttons.addControl("cam y",2, 0.01);
-		cameraZ = buttons.addControl("cam z",6, 0.01);
+		cameraZ = buttons.addControl("cam z",8, 0.01);
 
 		wholeModelAngleX = buttons.addControl("whole rot x", 0, 1 );
 		wholeModelAngleY = buttons.addControl("whole rot y", 0, 1 );
-
+		
 
 		zoom = buttons.addControl("zoom", 2, 0.01 );
+		
+		truckGas = buttons.addControl("Truck forward",0,1);
+		truckTurn =buttons.addControl("Turn truck right",0,0.01);
 
 		thisthis = this;
+		
+		clicky = new javax.swing.Timer( 100, this );
+		clicky.start();
+
+
+		Date date = new Date(); // now
+		lastTime = date.getTime(); // set lastTime to now
+
+	
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -166,13 +191,16 @@ public class Neighborhood  extends JFrame implements GLEventListener
 		// glu.gluPerspective(45.0f, h, 1.0, 20.0);
 		gl.glFrustum( -zoom.q, zoom.q, -zoom.q ,zoom.q, 4, 20 );
 
-		gl.glRotated(cameraAngleZ.q,0,0,1); // tilt the frame
-		gl.glRotated(cameraAngleX.q, 1, 0, 0 ); // look down or up
-		gl.glRotated(cameraAngleY.q, 0, 1, 0 );  // pan left or right
+		gl.glRotated(cameraAngleZ.q,0,0,1); // tilt the frame //good start
+		gl.glRotated(cameraAngleX.q, 1, 0, 0 ); // look down or up //good start
+		gl.glRotated(cameraAngleY.q, 0, 1, 0 );  // pan left or right //bad start. 85?
 		gl.glTranslated(-cameraX.q, // this is moving the camera
 				-cameraY.q, // to position, use negatives
 				-cameraZ.q
-				); // because it is reaally
+				); 
+
+		
+		// because it is reaally
 		// accomplished by pushing the scene in the opposite direction
 
 
@@ -185,15 +213,11 @@ public class Neighborhood  extends JFrame implements GLEventListener
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 
-
-
-
-
-
+		truck.drawMe(gl);
+		
 		for(int j = 0; j<30; j++)
 		{
 			houses[j].drawMe(gl);
-			//houses[j].report();
 		}
 
 		gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, green, 0);
@@ -293,6 +317,64 @@ public class Neighborhood  extends JFrame implements GLEventListener
 	public void dispose(GLAutoDrawable arg0) 
 	{
 		System.out.println("dispose() called");
+	}
+	
+	public void actionPerformed( ActionEvent e )
+	{
+		Date date = new Date();
+		long current = date.getTime();
+
+		// time since last update in seconds
+		double deltat = (current - lastTime)/1000.0; 
+
+		double deltat2 = deltat;
+		if(truckGas.q>0)
+		{
+		truckGas.q=1;
+		}
+		else if(truckGas.q<0)
+		{
+			truckGas.q=-1;
+		}
+		if(truckGas.dq==0)
+		{
+			deltat2=0.0;
+		}
+		
+		if(truckTurn.q>=5 && truckGas.q>0)
+		{
+			truckTurn.q=-5;
+			truckGas.q=-1;
+			truckGas.dq=truckGas.dq*-1;
+		}
+		else if(truckTurn.q<=-5 && truckGas.q>0)
+		{
+			truckTurn.q=5;
+			truckGas.q=-1;
+			truckGas.dq=truckGas.dq*-1;
+		}
+		else if(truckTurn.q>=5 && truckGas.q<0)
+		{
+			truckTurn.q=-5;
+			truckGas.q=1;
+			truckGas.dq=truckGas.dq*-1;
+		}
+		else if(truckTurn.q<=-5 && truckGas.q<0)
+		{
+			truckTurn.q=5;
+			truckGas.q=1;
+			truckGas.dq=truckGas.dq*-1;
+		}
+		
+		//System.out.println(truckGas.q);
+		//System.out.println(truckTurn.q);
+		System.out.println("The gas is " + truckGas.q+ " and the turn is " + truckTurn.q);
+		truck.adjust(truckGas.q,truckTurn.q);
+		truck.move(deltat2);
+		truck.wheelRot++;
+
+
+		lastTime = current;
 	}
 
 }
