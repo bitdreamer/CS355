@@ -40,7 +40,7 @@ public class BP extends JPanel implements ActionListener
       
       setBackground( new Color(200,180, 220 ) );
       
-      setPreferredSize(new Dimension( 350, 34 ) );
+      setPreferredSize(new Dimension( 400, 34 ) );
       setLayout( new FlowLayout() );
       
       add( new JLabel(name) );

@@ -37,9 +37,10 @@ public class Forest  extends JFrame implements GLEventListener
 
 	BP wholeModelAngleX; //tumbles the whole model toward us
 	BP wholeModelAngleY; // spins the whole model around a vertical axis
-
+	
 	BP zoom; // controls the cameral angle width
-
+	
+	BP grow;
 	ControlStuff4 buttons;
 
 	float angle;
@@ -79,7 +80,8 @@ public class Forest  extends JFrame implements GLEventListener
 		wholeModelAngleY = buttons.addControl("whole rot y", 0, 1 );
 
 		zoom = buttons.addControl("zoom", 2, 0.01 );
-
+		grow = buttons.addControl("grow", 1.5, -0.01);
+		
 		thisthis = this;
 
 		addWindowListener(new WindowAdapter() {
@@ -157,12 +159,13 @@ public class Forest  extends JFrame implements GLEventListener
 			gl.glRotated(-90, 1, 0, 0);
 			sapling.drawMe(gl);
 			gl.glTranslated(0, 0, cylHeight);
-			try {
-				sapling.branch(gl, cylHeight);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					Tree.cutoff = grow.q;
+					sapling.branch(gl, cylHeight);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			gl.glPopMatrix();
 		}
 		gl.glFlush();
