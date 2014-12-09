@@ -14,9 +14,11 @@ import flat.Dot;
 public class Tree
 {
 	GLUT glut;
+	static double cutoff = 0.2f;
+	
 	float angle=0;
 	float cylHeight;
-
+	
 	float beigeColor[] = { 1.0f, 0.9f, 0.8f, 1.0f};
 	float brickColor[] = { 0.79f, 0.25f, 0.32f, 1.0f};
 
@@ -42,7 +44,8 @@ public class Tree
 	public void branch(GL2 gl, float cylHeight) throws InterruptedException{
 		//Each branch will be 2/3rd the size of previous
 		cylHeight *= 0.66;
-		if (cylHeight > 0.2){		
+		
+		if (cylHeight > cutoff){		
 			//To the right
 			gl.glPushMatrix();
 			gl.glRotated(angle, 0, 1, 0);

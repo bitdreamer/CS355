@@ -12,32 +12,28 @@ import flat.Dot;
 public class Grass
 {
    
-   float forest[] = { 0.1f, 0.5f, 0.1f, 1.0f }; // green ish
-
    Point[] corner;
    float[] up = {  0,  1,  0, 0 }; // y normal
-
+   float[] color;
 
    
-   public Grass()
+   public Grass(double x, double z, float color[])
    {
-      corner = new Point[8];
+      corner = new Point[4];
+      this.color = color;
       
-      corner[0] = new Point(  10, 0,  10 );
-      corner[1] = new Point(  10, 0, -10 );
-      corner[2] = new Point( -10, 0, -10 );
-      corner[3] = new Point( -10, 0,  10 );
+      corner[0] = new Point(  x, 0,  z );
+      corner[1] = new Point(  x, 0, -z );
+      corner[2] = new Point( -x, 0, -z );
+      corner[3] = new Point( -x, 0,  z );
    }
    
    public void drawMe( GL2 gl )
-   {
-      //float blue[] = { 0.0f, 0.3f, 1.0f, 1.0f }; // green ish blue
-      //gl.glColor4fv(blue, 0);      
-
+   {    
       gl.glPushMatrix();
       //gl.glTranslated(-0.5, -0.5, -0.5 ); // center the cube on the origin
             
-      gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, forest, 0);
+      gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, color, 0);
       
       face( gl, 0, 1, 2, 3 , up );
       
